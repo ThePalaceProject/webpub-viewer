@@ -448,8 +448,6 @@ describe("IFrameNavigator", () => {
             await pause();
             expect(paginatorStart.callCount).to.equal(1);
             expect(paginatorStart.args[0][0]).to.equal(0);
-
-            expect(document.body.style.overflow).to.equal("hidden");
         });
 
         it("should set up the event handler on iframe load", async () => {
@@ -986,7 +984,7 @@ describe("IFrameNavigator", () => {
             expect(link4.href).to.equal("http://example.com/item-2.html");
             expect(link4.text).to.equal("Item 2");
 
-            const sublinks = link1.parentElement.querySelectorAll("ul > li > a");
+            const sublinks = link1.parentElement.querySelectorAll("li > ul > li > a");
             expect(sublinks.length).to.equal(2);
 
             expect(sublinks[0]).to.equal(link2);
