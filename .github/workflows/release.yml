@@ -1,0 +1,37 @@
+name: Publish Release
+
+on:
+  # The build will be triggered when we publish a release.
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - id: nvmrc
+      run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+    - name: Install Node.js 💻
+      uses: actions/setup-node@v4
+      with:
+        node-version: "${{ steps.nvmrc.outputs.NODE_VERSION }}"
+        registry-url: https://registry.npmjs.org/
+
+    - name: Install locked dependencies 🔧
+      run: npm clean-install
+
+    - name: Version ✅
+      run: npm version --no-git-tag-version ${{ github.event.release.tag_name }}
+
+    - name: Test 🧪
+      run: npm test
+
+    - name: Publish 📚
+      run: npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
